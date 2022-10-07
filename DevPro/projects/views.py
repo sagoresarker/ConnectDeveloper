@@ -1,11 +1,29 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-
+from .models import Project
+from .forms import ProjectForm
 # Create your views here.
+
+
 def project(request, pk):
-    context = {'id':pk}
+    project = Project.objects.get(id=pk)
+    context = {'project':project}
     return render(request, 'projects/single-project.html', context)
 
 def projects(request):
-    context = {}
-    return render(request, 'projects/projects.html')
+    projects = Project.objects.all()
+    context = {'projects':projects}
+    return render(request, 'projects/projects.html', context)
+
+
+def createProject(request):
+    form = ProjectForm()
+
+    if request.method == 'POST':
+        form = ProjectForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+        return redirect('projects')
+
+    context = {'form':form}
+    return render(request, 'projects/project_form.html', context)

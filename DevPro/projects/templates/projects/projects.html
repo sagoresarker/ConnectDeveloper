@@ -1,6 +1,9 @@
 {% include 'base.html' %}
 
 {% block content %}
-
+<p><h1>Project List</h1></p>
+    {% for project in projects %}
+        {{project.title}}
+    {% endfor %}
 
 {% endblock content %}
